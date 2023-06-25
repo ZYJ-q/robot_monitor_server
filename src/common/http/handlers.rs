@@ -116,7 +116,7 @@ pub async fn account(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Res
     }
 
     // body is loaded, now we can deserialize serde-json
-    let obj = serde_json::from_slice::<SelectAccount>(&body)?;
+    let obj = serde_json::from_slice::<Account>(&body)?;
 
     match database::is_active(db_pool.clone(), &obj.token) {
         true => {}
