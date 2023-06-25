@@ -238,22 +238,13 @@ pub struct Sub {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AccountRe {
-    pub total: Total,
+    // pub total: Total,
     pub subs: Vec<Sub>,
 }
 
 impl AccountRe {
     pub fn new() -> Self {
         Self {
-            total: Total {
-                time: String::new(),
-                equity_eth: String::new(),
-                net_worth_eth: String::new(),
-                net_worth: String::new(),
-                equity: String::new(),
-                // day_pnl: String::new(),
-                // week_pnl: String::new(),
-            },
             subs: Vec::new(),
         }
     }

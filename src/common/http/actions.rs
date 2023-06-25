@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use serde_json::Value;
-use chrono::Utc;
 use mysql::*;
 
 use crate::actors::adapters::binance::parase::{get_account_positions, get_income_data, get_open_orders, get_history_accounts};
@@ -39,13 +38,13 @@ pub async fn get_account(traders: HashMap<String, db_data::Trader>) -> http_data
 
     // 合成account数据
     let mut subs: Vec<http_data::Sub> = Vec::new();
-    let mut equities = 0.0;
-    let mut equities_eth = 0.0;
-    let mut origins = 0.0;
-    let mut day_pnls = 0.0;
-    let mut week_pnls = 0.0;
-    let now = Utc::now();
-    let date = format!("{}", now.format("%Y/%m/%d %H:%M:%S"));
+    // let mut equities = 0.0;
+    // let mut equities_eth = 0.0;
+    // let mut origins = 0.0;
+    // let mut day_pnls = 0.0;
+    // let mut week_pnls = 0.0;
+    // let now = Utc::now();
+    // let date = format!("{}", now.format("%Y/%m/%d %H:%M:%S"));
     for (key, value) in &name_api {
         let name = key;
         let origin = &traders.get(name).unwrap().ori_balance;
@@ -53,9 +52,9 @@ pub async fn get_account(traders: HashMap<String, db_data::Trader>) -> http_data
         let res = get_account_sub(value, name, id, origin.parse().unwrap()).await;
         match res {
             Some(sub) => {
-                equities += sub.total_equity.parse::<f64>().unwrap();
-                equities_eth += sub.total_equity_eth.parse::<f64>().unwrap();
-                origins += origin.parse::<f64>().unwrap();
+                // equities += sub.total_equity.parse::<f64>().unwrap();
+                // equities_eth += sub.total_equity_eth.parse::<f64>().unwrap();
+                // origins += origin.parse::<f64>().unwrap();
                 // day_pnls += sub.day_pnl.parse::<f64>().unwrap();
                 // week_pnls += sub.week_pnl.parse::<f64>().unwrap();
                 subs.push(sub);
@@ -66,11 +65,11 @@ pub async fn get_account(traders: HashMap<String, db_data::Trader>) -> http_data
         }
     }
     data.subs = subs;
-    data.total.time = date;
-    data.total.equity_eth = equities_eth.to_string();
-    data.total.net_worth = (equities / origins).to_string();
-    data.total.net_worth_eth = (equities_eth / origins).to_string();
-    data.total.equity = equities.to_string();
+    // data.total.time = date;
+    // data.total.equity_eth = equities_eth.to_string();
+    // data.total.net_worth = (equities / origins).to_string();
+    // data.total.net_worth_eth = (equities_eth / origins).to_string();
+    // data.total.equity = equities.to_string();
     // data.total.day_pnl = day_pnls.to_string();
     // data.total.week_pnl = week_pnls.to_string();
     // 发送信息
