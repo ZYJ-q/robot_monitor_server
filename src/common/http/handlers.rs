@@ -933,7 +933,7 @@ pub async fn update_ori_balance_data(mut payload: web::Payload, db_pool: web::Da
         }
     }
 
-    let data = database::update_ori_balance(db_pool.clone(), &obj.name, &obj.ori_balance);
+    let data = database::update_ori_balance(db_pool.clone(), &obj.tra_id, &obj.ori_balance);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {

@@ -992,12 +992,12 @@ pub fn update_positions(pool: web::Data<Pool>, name:&str, threshold:&str) -> Res
 }
 
 // 设置账户的份额
-pub fn update_ori_balance(pool: web::Data<Pool>, name:&str, ori_balance:&str) -> Result<()> {
+pub fn update_ori_balance(pool: web::Data<Pool>, tra_id:&str, ori_balance:&str) -> Result<()> {
     let mut conn = pool.get_conn().unwrap();
     let res = conn.exec_drop(
-        r"update traders set ori_balance = :ori_balance where name = :name",
+        r"update test_traders set ori_balance = :ori_balance where tra_id = :tra_id",
         params! {
-            "name" => name,
+            "tra_id" => tra_id,
             "ori_balance" => ori_balance
         },
     );
