@@ -20,7 +20,7 @@ pub async fn server(ip: String, config_db: HashMap<String, String>) -> std::io::
             // <- limit size of the payload (global configuration)
             .service(web::resource("/signIn").route(web::post().to(handlers::sign_in)))
             .service(web::resource("/signOut").route(web::post().to(handlers::sign_out)))
-            .service(web::resource("/account").route(web::post().to(handlers::get_account)))
+            .service(web::resource("/account").route(web::post().to(handlers::account)))
             .service(web::resource("/trades").route(web::post().to(handlers::trade)))
             .service(web::resource("/position").route(web::post().to(handlers::positions)))
             .service(web::resource("/net_worth").route(web::post().to(handlers::net_worth)))
