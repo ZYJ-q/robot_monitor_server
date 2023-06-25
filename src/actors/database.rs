@@ -219,7 +219,7 @@ pub fn get_products(pool: web::Data<Pool>, account_id: u64) -> Result<Option<Vec
 }
 
 // 获取账户列表
-pub fn get_traders(pool: web::Data<Pool>, prod_id: &str) -> Result<HashMap<String, Trader>> {
+pub fn get_traders(pool: web::Data<Pool>) -> Result<HashMap<String, Trader>> {
     let mut traders: HashMap<String, Trader> = HashMap::new();
     let mut conn = pool.get_conn().unwrap();
     let res = conn.query_map(
@@ -292,8 +292,8 @@ pub fn get_all_traders(pool: web::Data<Pool>) -> Result<Vec<Trader>> {
 }
 
 
-pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<Vec<Trader>> {
-    let mut traders: Vec<Trader> = Vec::new();
+pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<HashMap<String, Trader>> {
+    let mut traders: HashMap<String, Trader> = HashMap::new();
     let mut conn = pool.get_conn().unwrap();
     let res = conn
     .exec_first(
@@ -337,7 +337,7 @@ pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<Vec<Trader
                     match res {
                         Ok(trader) => match trader {
                             Some(tra) => {
-                                traders.push(tra);;
+                                traders.insert(format!("{}", &tra.name), tra);
                             }
                             None => {
                                 return Ok(traders);

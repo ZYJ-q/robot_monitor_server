@@ -4,7 +4,7 @@ use mysql::Pool;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use super::{database, SignIn, SignInRes, SignOut, Account, actions, Trade, Posr, NetWorthRe, IncomesRe, Equity, DateTrade, DelectOrders, AddOrders, AddPositions, UpdatePositions, UpdateOriBalance, UpdateAlarms, AddAccounts, SelectId};
+use super::{database, SignIn, SignInRes, SignOut, Account, actions, Trade, Posr, NetWorthRe, IncomesRe, Equity, DateTrade, DelectOrders, AddOrders, AddPositions, UpdatePositions, UpdateOriBalance, UpdateAlarms, AddAccounts, SelectId, SelectAccount};
 
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
@@ -103,42 +103,42 @@ pub async fn sign_out(
     }
 }
 
-// pub async fn account(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
-//     // payload is a stream of Bytes objects
-//     let mut body = web::BytesMut::new();
-//     while let Some(chunk) = payload.next().await {
-//         let chunk = chunk?;
-//         // limit max size of in-memory payload
-//         if (body.len() + chunk.len()) > MAX_SIZE {
-//             return Err(error::ErrorBadRequest("overflow"));
-//         }
-//         body.extend_from_slice(&chunk);
-//     }
+pub async fn account(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    // payload is a stream of Bytes objects
+    let mut body = web::BytesMut::new();
+    while let Some(chunk) = payload.next().await {
+        let chunk = chunk?;
+        // limit max size of in-memory payload
+        if (body.len() + chunk.len()) > MAX_SIZE {
+            return Err(error::ErrorBadRequest("overflow"));
+        }
+        body.extend_from_slice(&chunk);
+    }
 
-//     // body is loaded, now we can deserialize serde-json
-//     let obj = serde_json::from_slice::<Account>(&body)?;
+    // body is loaded, now we can deserialize serde-json
+    let obj = serde_json::from_slice::<SelectAccount>(&body)?;
 
-//     match database::is_active(db_pool.clone(), &obj.token) {
-//         true => {}
-//         false => {
-//             return Err(error::ErrorNotFound("account not active"));
-//         }
-//     }
+    match database::is_active(db_pool.clone(), &obj.token) {
+        true => {}
+        false => {
+            return Err(error::ErrorNotFound("account not active"));
+        }
+    }
 
-//     match database::get_traders(db_pool.clone(), &obj.prod_id) {
-//         Ok(traders) => {
-//             let acct_re = actions::get_account(traders).await;
-//             // println!("{:#?}", traders);
-//             return Ok(HttpResponse::Ok().json(Response {
-//                 status: 200,
-//                 data: acct_re,
-//             }));
-//         }
-//         Err(e) => {
-//             return Err(error::ErrorInternalServerError(e));
-//         }
-//     }
-// }
+    match database::get_traders(db_pool.clone()) {
+        Ok(traders) => {
+            let acct_re = actions::get_account(traders).await;
+            // println!("{:#?}", traders);
+            return Ok(HttpResponse::Ok().json(Response {
+                status: 200,
+                data: acct_re,
+            }));
+        }
+        Err(e) => {
+            return Err(error::ErrorInternalServerError(e));
+        }
+    }
+}
 
 // 获取所有账户列表（显示为机器人列表）
 pub async fn get_account(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {

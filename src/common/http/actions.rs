@@ -13,6 +13,8 @@ pub async fn get_account(traders: HashMap<String, db_data::Trader>) -> http_data
     // http池子、
     let mut name_api: HashMap<String, Box<dyn HttpVenueApi>> = HashMap::new();
 
+    println!("traders{:?}", traders);
+
     for (key, value) in &traders {
         match value.tra_venue.as_str() {
             "Binance" => match value.r#type.as_str() {
