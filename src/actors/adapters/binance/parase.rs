@@ -50,6 +50,13 @@ pub async fn get_account_sub(
         let total_wallet_balance: f64 = ((new_total_balance / best_price) - 40.00) * best_price;
         // 权益
         let new_total_equity_eth: f64 = ((new_total_equity / best_price) - 40.00) * best_price;
+        let mut net_worth = 0.0;
+
+        if name == "Angus" {
+            net_worth = new_total_equity_eth / origin_balance
+        } else {
+            net_worth = new_total_equity / origin_balance
+        }
         // let total_balance: f64 = value
         //     .as_object()
         //     .unwrap()
@@ -138,8 +145,6 @@ pub async fn get_account_sub(
 
             println!("当前挂单数量:{}, name:{}", open_order, name);
 
-           
-
             return Some(Sub {
                 id: String::from(id.to_string()),
                 name: String::from(name),
@@ -151,6 +156,7 @@ pub async fn get_account_sub(
                 leverage_eth: format!("{}", leverage_eth),
                 position: format!("{}", position),
                 open_order_amt: format!("{}", open_order),
+                net_worth: format!("{}", net_worth),
                 // day_transaction_price: format!("{}", day_transaction_price),
                 // week_transaction_price: format!("{}", week_transaction_price),
                 // day_pnl: format!("{}", day_pnl ),

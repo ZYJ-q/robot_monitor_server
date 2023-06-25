@@ -211,6 +211,7 @@ pub struct Total {
 pub struct Sub {
     pub id: String,
     pub name: String,
+    pub net_worth: String,
     // pub origin_balance: String,
     pub total_balance_u: String,
     pub total_balance: String,
