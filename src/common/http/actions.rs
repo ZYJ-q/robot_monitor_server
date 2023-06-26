@@ -49,6 +49,7 @@ pub async fn get_account(traders: HashMap<String, db_data::Trader>) -> http_data
         let name = key;
         let origin = &traders.get(name).unwrap().ori_balance;
         let id = &traders.get(name).unwrap().tra_id;
+        // let open_alarm = &traders.get(name).unwrap().alarm;
         let res = get_account_sub(value, name, id, origin.parse().unwrap()).await;
         match res {
             Some(sub) => {

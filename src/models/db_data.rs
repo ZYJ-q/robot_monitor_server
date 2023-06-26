@@ -75,7 +75,7 @@ pub struct Trader {
     pub other_keys: String,
     pub r#type: String,
     pub name: String,
-    pub show: String,
+    pub alarm: String,
     pub threshold: String
 }
 

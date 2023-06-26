@@ -231,7 +231,7 @@ pub fn get_traders(pool: web::Data<Pool>) -> Result<HashMap<String, Trader>> {
             other_keys,
             r#type,
             name,
-            show,
+            alarm,
             threshold)| Trader {
                 tra_id,
                 tra_venue,
@@ -242,7 +242,7 @@ pub fn get_traders(pool: web::Data<Pool>) -> Result<HashMap<String, Trader>> {
                 other_keys,
                 r#type,
                 name,
-                show,
+                alarm,
                 threshold,
             }
     ).unwrap();
@@ -270,7 +270,7 @@ pub fn get_all_traders(pool: web::Data<Pool>) -> Result<Vec<Trader>> {
             other_keys,
             r#type,
             name,
-            show,
+            alarm,
             threshold)| Trader {
                 tra_id,
                 tra_venue,
@@ -281,7 +281,7 @@ pub fn get_all_traders(pool: web::Data<Pool>) -> Result<Vec<Trader>> {
                 other_keys,
                 r#type,
                 name,
-                show,
+                alarm,
                 threshold,
             }
     ).unwrap();
@@ -314,7 +314,7 @@ pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<HashMap<St
                                     other_keys,
                                     r#type,
                                     name,
-                                    show,
+                                    alarm,
                                     threshold
                                 )| Trader {
                                     tra_id,
@@ -326,7 +326,7 @@ pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<HashMap<St
                                     other_keys,
                                     r#type,
                                     name,
-                                    show,
+                                    alarm,
                                     threshold
                                 },
                             )
@@ -398,8 +398,8 @@ pub fn get_trader_incomes(pool: web::Data<Pool>) -> Result<HashMap<String, Trade
     let mut conn = pool.get_conn().unwrap();
     let res = conn.query_map(
         "select * from test_traders",
-        |(tra_id, tra_venue, ori_balance, tra_currency, api_key, secret_key, other_keys, r#type, name, show, threshold)| {
-            Trader{ tra_id, tra_venue, ori_balance, tra_currency, api_key, secret_key, other_keys, r#type, name, show, threshold }
+        |(tra_id, tra_venue, ori_balance, tra_currency, api_key, secret_key, other_keys, r#type, name, alarm, threshold)| {
+            Trader{ tra_id, tra_venue, ori_balance, tra_currency, api_key, secret_key, other_keys, r#type, name, alarm, threshold }
         }
         ).unwrap(); 
 
@@ -534,7 +534,7 @@ pub fn get_trader_positions(pool: web::Data<Pool>, tra_id: &str) -> Result<HashM
                                     other_keys,
                                     r#type,
                                     name,
-                                    show,
+                                    alarm,
                                     threshold
                                 )| Trader {
                                     tra_id,
@@ -546,7 +546,7 @@ pub fn get_trader_positions(pool: web::Data<Pool>, tra_id: &str) -> Result<HashM
                                     other_keys,
                                     r#type,
                                     name,
-                                    show,
+                                    alarm,
                                     threshold
                                 },
                             )
