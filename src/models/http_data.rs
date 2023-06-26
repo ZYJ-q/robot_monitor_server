@@ -129,7 +129,16 @@ pub struct AddPositions{
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UpdatePositions{
+pub struct UpdateOpenAlarm{
+    pub r#type: String,
+    pub token: String,
+    pub name: String,
+    pub alarm: String
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateThreshold{
     pub r#type: String,
     pub token: String,
     pub name: String,

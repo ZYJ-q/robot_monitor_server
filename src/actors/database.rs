@@ -289,7 +289,7 @@ pub fn get_all_traders(pool: web::Data<Pool>) -> Result<Vec<Trader>> {
     return Ok(res);
 }
 
-
+// 获取单个账户（便于显示账户的详情数据）
 pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<HashMap<String, Trader>> {
     let mut traders: HashMap<String, Trader> = HashMap::new();
     let mut conn = pool.get_conn().unwrap();
@@ -349,6 +349,47 @@ pub fn get_one_traders(pool: web::Data<Pool>, tra_id: &str) -> Result<HashMap<St
 }
 
 
+
+// 更新test_traders中的挂单监控数据
+pub fn update_open_alarm(pool: web::Data<Pool>, name:&str, alarm:&str) -> Result<()> {
+    let mut conn = pool.get_conn().unwrap();
+    let res = conn.exec_drop(
+        r"update test_traders set alarm = :alarm where name = :name",
+        params! {
+            "name" => name,
+            "alarm" => alarm
+        },
+    );
+    match res {
+        Ok(()) => {
+            return Ok(());
+        }
+        Err(e) => {
+            return Err(e);
+        }
+    }
+}
+
+
+// 更新test_traders中的净头寸监控数据
+pub fn update_threshold(pool: web::Data<Pool>, name:&str, threshold:&str) -> Result<()> {
+    let mut conn = pool.get_conn().unwrap();
+    let res = conn.exec_drop(
+        r"update test_traders set threshold = :threshold where name = :name",
+        params! {
+            "name" => name,
+            "threshold" => threshold
+        },
+    );
+    match res {
+        Ok(()) => {
+            return Ok(());
+        }
+        Err(e) => {
+            return Err(e);
+        }
+    }
+}
 
 
 // 获取所有的api Key 数据（账户历史划转记录）

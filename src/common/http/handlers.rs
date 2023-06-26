@@ -4,7 +4,7 @@ use mysql::Pool;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 
-use super::{database, SignIn, SignInRes, SignOut, Account, actions, Trade, Posr, NetWorthRe, IncomesRe, Equity, DateTrade, DelectOrders, AddOrders, AddPositions, UpdatePositions, UpdateOriBalance, UpdateAlarms, AddAccounts, SelectId, SelectAccount};
+use super::{database, SignIn, SignInRes, SignOut, Account, actions, Trade, Posr, NetWorthRe, IncomesRe, Equity, DateTrade, DelectOrders, AddOrders, AddPositions, UpdateOpenAlarm, UpdateThreshold, UpdateOriBalance, UpdateAlarms, AddAccounts, SelectId, SelectAccount};
 
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
@@ -871,8 +871,10 @@ pub async fn delect_positions_data(mut payload: web::Payload, db_pool: web::Data
     }
 }
 
-// 添加监控的净头寸账户
-pub async fn add_positions_data(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
+
+
+// 更新test_traders中的挂单监控是否开启
+pub async fn update_account_open_alarm(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
     // payload is a stream of Bytes objects
     let mut body = web::BytesMut::new();
     while let Some(chunk) = payload.next().await {
@@ -885,7 +887,7 @@ pub async fn add_positions_data(mut payload: web::Payload, db_pool: web::Data<Po
     }
 
     // body is loaded, now we can deserialize serde-json
-    let obj = serde_json::from_slice::<AddPositions>(&body)?;
+    let obj = serde_json::from_slice::<UpdateOpenAlarm>(&body)?;
 
     match database::is_active(db_pool.clone(), &obj.token) {
         true => {}
@@ -894,7 +896,7 @@ pub async fn add_positions_data(mut payload: web::Payload, db_pool: web::Data<Po
         }
     }
 
-    let data = database::add_positions(db_pool.clone(), &obj.name, &obj.api_key, &obj.secret_key, &obj.threshold);
+    let data = database::update_open_alarm(db_pool.clone(), &obj.name, &obj.alarm);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {
@@ -909,9 +911,8 @@ pub async fn add_positions_data(mut payload: web::Payload, db_pool: web::Data<Po
     }
 }
 
-
-// 更新监控的净头寸账户阈值
-pub async fn update_positions_data(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
+// 更新test_traders中的账户净头寸阈值
+pub async fn update_account_threshold(mut payload: web::Payload, db_pool: web::Data<Pool>) -> Result<HttpResponse, Error> {
     // payload is a stream of Bytes objects
     let mut body = web::BytesMut::new();
     while let Some(chunk) = payload.next().await {
@@ -924,7 +925,7 @@ pub async fn update_positions_data(mut payload: web::Payload, db_pool: web::Data
     }
 
     // body is loaded, now we can deserialize serde-json
-    let obj = serde_json::from_slice::<UpdatePositions>(&body)?;
+    let obj = serde_json::from_slice::<UpdateThreshold>(&body)?;
 
     match database::is_active(db_pool.clone(), &obj.token) {
         true => {}
@@ -933,7 +934,7 @@ pub async fn update_positions_data(mut payload: web::Payload, db_pool: web::Data
         }
     }
 
-    let data = database::update_positions(db_pool.clone(), &obj.name, &obj.threshold);
+    let data = database::update_threshold(db_pool.clone(), &obj.name, &obj.threshold);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {
