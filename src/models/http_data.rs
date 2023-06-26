@@ -87,7 +87,7 @@ pub struct Equity {
 pub struct DelectOrders{
     pub r#type: String,
     pub token: String,
-    pub name: String
+    pub tra_id: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]

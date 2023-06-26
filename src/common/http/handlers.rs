@@ -741,7 +741,7 @@ pub async fn delect_open_orders_data(mut payload: web::Payload, db_pool: web::Da
         }
     }
 
-    let data = database::delect_orders(db_pool.clone(), &obj.name);
+    let data = database::delect_orders(db_pool.clone(), &obj.tra_id);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {
@@ -856,7 +856,7 @@ pub async fn delect_positions_data(mut payload: web::Payload, db_pool: web::Data
         }
     }
 
-    let data = database::delect_positions(db_pool.clone(), &obj.name);
+    let data = database::delect_positions(db_pool.clone(), &obj.tra_id);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {
@@ -1049,7 +1049,7 @@ pub async fn delete_accounts_data(mut payload: web::Payload, db_pool: web::Data<
         }
     }
 
-    let data = database::delect_accounts(db_pool.clone(), &obj.name);
+    let data = database::delect_accounts(db_pool.clone(), &obj.tra_id);
     match data {
         Ok(all_products) => {
             return Ok(HttpResponse::Ok().json(Response {

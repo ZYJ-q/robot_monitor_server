@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 
 use actix_web::web;
-use futures_util::io::Read;
-use log4rs::filter::threshold;
 use mysql::prelude::*;
 use mysql::*;
 
@@ -1032,12 +1030,12 @@ pub fn update_alarms(pool: web::Data<Pool>, name:&str, alarm:&str) -> Result<()>
 }
 
 // 删除账户
-pub fn delect_accounts(pool: web::Data<Pool>, name:&str) -> Result<()> {
+pub fn delect_accounts(pool: web::Data<Pool>, tra_id:&str) -> Result<()> {
     let mut conn = pool.get_conn().unwrap();
     let res = conn.exec_drop(
-        r"delete from test_traders where name = :name",
+        r"delete from test_traders where tra_id = :tra_id",
         params! {
-            "name" => name
+            "tra_id" => tra_id
         },
     );
     match res {
@@ -1089,7 +1087,7 @@ pub fn add_accounts(pool: web::Data<Pool>, name:&str, api_key: &str, secret_key:
 pub fn select_id(pool: web::Data<Pool>, name: &str, prod_id: &str) -> Result<()> {
     let mut conn = pool.get_conn().unwrap();
 
-    println!("传过来的参数{}", prod_id);
+    // println!("传过来的参数{}", prod_id);
 
     let res:Result<Vec<u64>> = conn.exec(
         "select tra_id from test_traders where name = :name", 
