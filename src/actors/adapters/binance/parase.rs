@@ -27,7 +27,7 @@ pub async fn get_account_sub(
             let symbol = obj.get("asset").unwrap().as_str().unwrap();
 
             if wallet_balance != 0.00 {
-                if symbol == "ETH" {
+                if symbol != "USDT" || symbol != "USDP" || symbol != "USDC" {
                     let asset = format!("{}USDT", symbol);
                     if let Some(data) = http_api.get_klines(&asset).await {
                         let v: Value = serde_json::from_str(&data).unwrap();
