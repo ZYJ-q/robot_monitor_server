@@ -25,6 +25,9 @@ pub async fn get_account_sub(
             let obj = a.as_object().unwrap();
             let wallet_balance: f64 = obj.get("walletBalance").unwrap().as_str().unwrap().parse().unwrap();
             let symbol = obj.get("asset").unwrap().as_str().unwrap();
+            if name == "angus" {
+            println!(" 账户数据{:?}", assets);
+        }
 
             if wallet_balance != 0.00 {
                 if symbol != "USDT" || symbol != "USDP" || symbol != "USDC" {
